@@ -36,12 +36,10 @@ if st.button("진단하기"):
 
 if not password:
     st.warning("비밀번호를 입력해주세요.")
-else:
 
-    # 벡터 변환
+else:
     vec = vectorizer.transform([password])
 
-    # 예측
     prob = model.predict_proba(vec)[0]
 
     risk = round(prob[0] * 100, 1)
@@ -50,7 +48,6 @@ else:
     result = model.predict(vec)[0]
 
     st.divider()
-
     st.subheader("📊 분석 결과")
 
     st.write(f"위험도 : {risk}%")
@@ -63,7 +60,6 @@ else:
     else:
         st.success("✅ 비교적 안전한 비밀번호로 판단됩니다.")
 
-    # 패턴 분석
     feature_names = vectorizer.get_feature_names_out()
     nonzero_indices = vec.nonzero()[1]
 
@@ -71,10 +67,7 @@ else:
 
     for idx in nonzero_indices:
         patterns.append(
-            (
-                feature_names[idx],
-                vec[0, idx]
-            )
+            (feature_names[idx], vec[0, idx])
         )
 
     patterns = sorted(
@@ -84,13 +77,11 @@ else:
     )[:3]
 
     if patterns:
-
         st.subheader("🔍 탐지된 주요 패턴")
 
         for p, score in patterns:
             st.write(f"• {p}")
 
-    # 개선 권고
     st.subheader("🛠️ 개선 권고")
 
     suggestions = []
