@@ -4,14 +4,24 @@ import joblib
 model = joblib.load("model.pkl")
 vectorizer = joblib.load("vectorizer.pkl")
 
-st.title("AI Password Checker")
+st.title("🔐 AI 패스워드 보안 진단 시스템")
 
-password = st.text_input("Password", type="password")
+password = st.text_input("비밀번호를 입력하세요", type="password")
 
-if st.button("Check"):
-      st.write("Working...")
+if st.button("진단하기"):
 
-      vec = vectorizer.transform([password])
-      prob = model.predict_proba(vec)[0]
+    vec = vectorizer.transform([password])
+    prob = model.predict_proba(vec)[0]
 
-      st.write(prob)
+    risk = round(prob[0] * 100, 1)
+    secure = round(prob[1] * 100, 1)
+
+    st.write(f"🚨 위험도: {risk}%")
+    st.write(f"✅ 안전도: {secure}%")
+
+    st.progress(int(secure))
+
+    if risk >= 50:
+        st.error("위험한 비밀번호입니다.")
+    else:
+        st.success("비교적 안전한 비밀번호입니다.")
